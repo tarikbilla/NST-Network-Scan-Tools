@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV '/media/tarik/CoderBD/THM University/IoT-Security-Audit-Tool/backend/venv'
+set -gx VIRTUAL_ENV '/media/tarik/CoderBD/THM University/NST-Network-Scan-Tools/backend/venv'
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

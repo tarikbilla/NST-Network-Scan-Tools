@@ -80,4 +80,36 @@ NST provides comprehensive insights into devices connected to your local network
 ### Clone the Repository
 ```bash
 git clone https://github.com/your-username/nst-network-scan-tool.git
-cd nst-network-scan-tool
+cd project_directory
+```
+### install requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run Backend FastAPI
+### Active venv
+```bash
+ python3 -m venv venv
+ source venv/bin/activate
+ ```
+
+### Run FastAPI
+
+```bash
+uvicorn main:app --reload
+```
+
+
+### APIs
+
+- **/network/deviceip/**  
+  Get device local ip address
+
+- **/network/gateway/**  
+  Get device default gateway
+
+- **/network/name/**  
+  Get device connected network name
+

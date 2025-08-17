@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from api import network
+from api import ipRoute
 
 app = FastAPI()
 
@@ -14,8 +16,13 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"message": "FastAPI backend is running!"}
+    return {"message": "Welcome to NST"}
 
 @app.get("/scan/ftp")
 def scan_ftp(ip: str):
     return {"ip": ip, "result": "FTP scan completed (demo response)"}
+
+# Include the gateway API route
+app.include_router(network.router, prefix="/api/network", tags=["Network"])
+
+app.include_router(ipRoute.router, prefix="/api/ip", tags=["ip"])

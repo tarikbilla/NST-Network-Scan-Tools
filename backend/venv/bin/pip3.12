@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/media/tarik/CoderBD/THM University/IoT-Security-Audit-Tool/backend/venv/bin/python3" "$0" "$@"
+'''exec' "/media/tarik/CoderBD/THM University/NST-Network-Scan-Tools/backend/venv/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
