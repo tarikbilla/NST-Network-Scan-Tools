@@ -1,8 +1,11 @@
 from fastapi import APIRouter
 import os
+from typing import List
 from core.netwrok.getDefaultGetway import get_gateway_ip
 from core.netwrok.getDeviceLocalIpAddress import get_device_local_ip
 from core.netwrok.getNetworkName import get_connected_network_name
+from core.netwrok.getAllIP import scan_network
+
 
 router = APIRouter()
 
@@ -39,3 +42,11 @@ def get_network_info():
         "device_local_ip": local_ip,
         "network_name": network_name
     }
+
+
+@router.get("/allip")
+def get_connected_ips():
+    gateway_ip = get_gateway_ip()  # Fetch the gateway IP
+    network_ip = f"{gateway_ip}/24"  # Assuming /24 subnet mask for local network
+    ips = scan_network(network_ip)  # Call the scan_network function to get all connected IPs
+    return ips
