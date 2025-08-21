@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api import network
 from api import ipRoute
+from api import allip
 
 app = FastAPI()
 
@@ -23,6 +24,9 @@ def scan_ftp(ip: str):
     return {"ip": ip, "result": "FTP scan completed (demo response)"}
 
 # Include the gateway API route
+app.include_router(allip.router, prefix="/api/allip", tags=["Network"])
+
 app.include_router(network.router, prefix="/api/network", tags=["Network"])
 
 app.include_router(ipRoute.router, prefix="/api/ip", tags=["ip"])
+

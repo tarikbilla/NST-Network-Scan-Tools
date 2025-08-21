@@ -1,11 +1,11 @@
-# 🔍 NST - Network Scan Tool
+# NST - Network Scan Tool
 
 **NST (Network Scan Tool)** is a cross-platform, lightweight, and modular IoT audit and network vulnerability scanner. Designed for cybersecurity professionals and system administrators, NST helps identify network services, simulate vulnerabilities, and visualize results in real-time—all in a standalone and offline-capable desktop application.
 
 ---
 
 
-## 🧠 Advanced Network Discovery & Profiling
+## Advanced Network Discovery & Profiling
 
 NST provides comprehensive insights into devices connected to your local network:
 
@@ -38,26 +38,26 @@ NST provides comprehensive insights into devices connected to your local network
   
 ---
 
-## 🚀 Features
+## Features
 
-- 🔧 **Modular Scanning Engine**  
+- **Modular Scanning Engine**  
   Supports common protocols: FTP, SFTP, SSH, Telnet, HTTP, HTTPS
 
-- 📡 **Real-Time Feedback**  
+- **Real-Time Feedback**  
   Live logs, scan results, and vulnerability alerts via WebSockets
 
-- 🧠 **User-Friendly Interface**  
+- **User-Friendly Interface**  
   Clean, modern UI with support for both novice and expert users
 
-- 🗂️ **Persistent Scan History**  
+- **Persistent Scan History**  
   Local scan history with export and analysis capabilities
 
-- 💻 **Cross-Platform Deployment**  
+- **Cross-Platform Deployment**  
   Native desktop support for Windows & Linux (Electron / Tauri)
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Layer       | Tech Used              |
 |-------------|------------------------|
@@ -69,7 +69,7 @@ NST provides comprehensive insights into devices connected to your local network
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 - Node.js & npm
@@ -101,8 +101,36 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
+or 
+```bash
+sudo ./venv/bin/uvicorn main:app --reload
+```
+
+
+### Steps to Kill the Process:
+
+Kill Process (if need)
+Find and Kill the Process Using the Port
+```bash
+sudo lsof -i :8000
+```
+This will show you which process is using port 8000. Once you have the process ID (PID), you can kill it:
+```bash
+sudo kill -9 <PID>
+```
+Change the Port (if needed)
+```bash
+sudo ./venv/bin/uvicorn main:app --reload --port 8001
+```
 
 ### APIs
+
+#### All IP
+
+- **/allip
+  Get all connected ip address
+
+#### Network
 
 - **/network/deviceip/**  
   Get device local ip address
@@ -113,3 +141,10 @@ uvicorn main:app --reload
 - **/network/name/**  
   Get device connected network name
 
+#### IP
+
+- **/ip/mac/IP_ADDRESS**  
+  Get mac address using IP address
+
+- **/ip/ports/IP_ADDRESS**  
+  Get all open ports of an IP address

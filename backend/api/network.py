@@ -4,7 +4,6 @@ from typing import List
 from core.netwrok.getDefaultGetway import get_gateway_ip
 from core.netwrok.getDeviceLocalIpAddress import get_device_local_ip
 from core.netwrok.getNetworkName import get_connected_network_name
-from core.netwrok.getAllIP import scan_network
 
 
 router = APIRouter()
