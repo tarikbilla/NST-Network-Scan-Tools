@@ -135,7 +135,7 @@ sudo ./venv/bin/uvicorn main:app --reload --port 8001
 - **/network/deviceip/**  
   Get device local ip address
 
-- **/network/gateway/**  
+- **/network/gateway/**
   Get device default gateway
 
 - **/network/name/**  

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api import network
 from api import ipRoute
 from api import allip
+from api import ports
 
 app = FastAPI()
 
@@ -29,4 +30,6 @@ app.include_router(allip.router, prefix="/api/allip", tags=["Network"])
 app.include_router(network.router, prefix="/api/network", tags=["Network"])
 
 app.include_router(ipRoute.router, prefix="/api/ip", tags=["ip"])
+
+app.include_router(ports.router, prefix="/api/ports", tags=["ports"])
 
