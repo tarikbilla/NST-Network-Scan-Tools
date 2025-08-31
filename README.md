@@ -127,24 +127,61 @@ sudo ./venv/bin/uvicorn main:app --reload --port 8001
 
 #### All IP
 
-- **/allip
+- **/api/allip/**  
   Get all connected ip address
 
 #### Network
 
 - **/network/deviceip/**  
-  Get device local ip address
+  Get device local ip address     
+  *Status:* *✅ Done*
 
-- **/network/gateway/**
-  Get device default gateway
+- **/network/gateway/**   
+  Get device default gateway    
+  *Status:* *✅ Done*
 
 - **/network/name/**  
-  Get device connected network name
+  Get device connected network name     
+  *Status:* *✅ Done*
 
 #### IP
 
 - **/ip/mac/IP_ADDRESS**  
-  Get mac address using IP address
+  Get mac address using IP address    
+  *Status:* *✅ Done*
+
+- **/ip/devicetype/IP_ADDRESS**  
+  Get Device Type using IP address     
+  *Status:* 
+
+- **/ip/os/IP_ADDRESS**  
+  Get OS using IP address   
+  *Status:* 
+
+- **/ip/firewall/IP_ADDRESS**  
+  Get Firewall Status using IP address    
+  *Status:* 
 
 - **/ip/ports/IP_ADDRESS**  
-  Get all open ports of an IP address
+  Get all open ports of an IP address     
+  *Status:* *✅ Done*
+
+
+#### Ports
+
+- **/api/ports/http/IP_ADDRESS**  
+  Get HTTP Port Details     
+  *Status:* *✅ Done*
+
+- **/api/ports/ftp/IP_ADDRESS**  
+  Get FTP Port Details    
+  *Status:* *✅ Done*
+
+- **/api/ports/http/IP_ADDRESS**  
+  Get HTTP Port Details     
+  *Status:* *✅ Done*
+
+
+- **/api/ports/sftp/IP_ADDRESS**  
+  Get SFTP Port Details    
+  *Status:* 

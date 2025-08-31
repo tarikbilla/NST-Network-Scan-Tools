@@ -10,7 +10,22 @@ from cryptography.x509.oid import NameOID
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def get_ssl_certificate_info(ip, port):
+def is_https_port_open(ip, port=443):
+    try:
+        context = ssl._create_unverified_context()
+        with socket.create_connection((ip, port), timeout=2) as sock:
+            with context.wrap_socket(sock, server_hostname=ip) as ssock:
+                print("HTTPS port is open and responding")
+                return True
+    except Exception as e:
+        print("HTTPS port check failed: " + str(e))
+        return False
+
+
+def get_ssl_certificate_info(ip, port=443):
+    if not is_https_port_open(ip, port):
+        return ("Port is not open or does not support HTTPS")
+
     try:
         context = ssl._create_unverified_context()
         with socket.create_connection((ip, port), timeout=3) as sock:
@@ -39,37 +54,31 @@ def get_ssl_certificate_info(ip, port):
                     except IndexError:
                         return "N/A"
 
-                print("\nSSL Certificate Details")
-                print("------------------------")
-                print(f"SSL Version           : {ssl_version}")
-                print(f"Signature Algorithm   : {cert.signature_hash_algorithm.name}")
-                print(f"Common Name (CN)      : {get_attr(NameOID.COMMON_NAME)}")
-                print(f"Organization (O)      : {get_attr(NameOID.ORGANIZATION_NAME)}")
-                print(f"Org Unit (OU)         : {get_attr(NameOID.ORGANIZATIONAL_UNIT_NAME)}")
-                print(f"Country (C)           : {get_attr(NameOID.COUNTRY_NAME)}")
-                print(f"Email Address         : {get_attr(NameOID.EMAIL_ADDRESS)}")
-                print(f"Issuer CN             : {get_issuer_attr(NameOID.COMMON_NAME)}")
-                print(f"Valid From            : {valid_from}")
-                print(f"Valid Until           : {valid_until}")
-                print(f"Certificate Valid     : {'Yes' if days_remaining > 0 else 'No'} (Expires in {days_remaining} days)")
-                print(f"Self-Signed           : {'Yes' if subject == issuer else 'No'}")
-                return True
+                # Concatenate all details into a single string
+                ssl_details = {
+                    "SSL Version": ssl_version,
+                    "Signature Algorithm": cert.signature_hash_algorithm.name,
+                    "Common Name (CN)": get_attr(NameOID.COMMON_NAME),
+                    "Organization (O)": get_attr(NameOID.ORGANIZATION_NAME),
+                    "Org Unit (OU)": get_attr(NameOID.ORGANIZATIONAL_UNIT_NAME),
+                    "Country (C)": get_attr(NameOID.COUNTRY_NAME),
+                    "Email Address": get_attr(NameOID.EMAIL_ADDRESS),
+                    "Issuer CN": get_issuer_attr(NameOID.COMMON_NAME),
+                    "Valid From": valid_from.isoformat(),  # Return as ISO format string
+                    "Valid Until": valid_until.isoformat(),  # Return as ISO format string
+                    "Certificate Valid": "Yes" if days_remaining > 0 else "No",
+                    "Expires in (days)": days_remaining,
+                    "Self-Signed": "Yes" if subject == issuer else "No"
+                }
+
+                # Return the concatenated string
+                return ssl_details
     except Exception as e:
         print("Error fetching SSL details: " + str(e))
         return False
 
-def is_https_port_open(ip, port=443):
-    try:
-        context = ssl._create_unverified_context()
-        with socket.create_connection((ip, port), timeout=2) as sock:
-            with context.wrap_socket(sock, server_hostname=ip) as ssock:
-                print("HTTPS port is open and responding")
-                return True
-    except Exception as e:
-        print("HTTPS port check failed: " + str(e))
-        return False
 
-def check_https_vulnerability(ip, port):
+def check_https_vulnerability(ip, port=443):
     if not is_https_port_open(ip, port):
         print("Port is not open or does not support HTTPS")
         return False

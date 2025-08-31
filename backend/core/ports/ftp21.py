@@ -85,26 +85,21 @@ def chmod_all_dirs(ftp):
     except Exception as e:
         print(f"[ERROR] CHMOD operation failed: {e}")
 
-def get_ftp_info_before_login(ftp):
-    print("\n" + "=" * 50)
-    print("FTP INFORMATION BEFORE LOGIN")
-    print("=" * 50)
-
-    results = {}
-
-    def show(label, value):
-        print(label)
-        print(value)
-        print()
+def get_ftp_info_before_login(ftp) -> dict:
+    results = {
+        "Banner": None,
+        "Commands": {}
+    }
 
     # Banner
     try:
         banner = ftp.getwelcome()
         results["Banner"] = banner
-        show("Banner", banner)
     except Exception as e:
         results["Banner"] = None
+        results["Error_Banner"] = str(e)
 
+    # Common FTP commands to test
     commands = {
         "Features (FEAT)": "FEAT",
         "System Type (SYST)": "SYST",
@@ -117,12 +112,13 @@ def get_ftp_info_before_login(ftp):
     for label, cmd in commands.items():
         try:
             response = ftp.sendcmd(cmd)
-            results[label] = response
-            show(label, response)
+            results["Commands"][label] = response
         except Exception as e:
-            results[label] = None
+            results["Commands"][label] = None
+            results[f"Error_{label}"] = str(e)
 
     return results
+
 
 def get_ftp_info_after_login(ftp, pre_login_results):
     print("\n" + "=" * 50)
