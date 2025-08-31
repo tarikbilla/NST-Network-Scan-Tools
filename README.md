@@ -156,11 +156,11 @@ sudo ./venv/bin/uvicorn main:app --reload --port 8001
 
 - **/ip/os/IP_ADDRESS**  
   Get OS using IP address   
-  *Status:* 
+  *Status:* *✅ Done*
 
 - **/ip/firewall/IP_ADDRESS**  
   Get Firewall Status using IP address    
-  *Status:* 
+  *Status:* *✅ Done*
 
 - **/ip/ports/IP_ADDRESS**  
   Get all open ports of an IP address     
@@ -184,4 +184,4 @@ sudo ./venv/bin/uvicorn main:app --reload --port 8001
 
 - **/api/ports/sftp/IP_ADDRESS**  
   Get SFTP Port Details    
-  *Status:* 
+  *Status:* *✅ Done* 
