@@ -100,6 +100,11 @@ pip install -r requirements.txt
 ```bash
 uvicorn main:app --reload
 ```
+or
+```bash
+python3 -m uvicorn main:app --reload
+
+```
 
 or 
 ```bash
@@ -160,7 +165,7 @@ sudo ./venv/bin/uvicorn main:app --reload --port 8001
 
 - **/ip/firewall/IP_ADDRESS**  
   Get Firewall Status using IP address    
-  *Status:* *✅ Done*
+  *Status:* 
 
 - **/ip/ports/IP_ADDRESS**  
   Get all open ports of an IP address     
