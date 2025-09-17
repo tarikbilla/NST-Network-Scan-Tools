@@ -1,15 +1,11 @@
-import Header from '../../components/global/Header';
-import Footer from '../../components/global/Footer';
-
+import { useParams } from 'react-router-dom';
 export default function Singleip() {
+  const { ip } = useParams();  // Get the 'ip' parameter from the URL
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#090914] text-white">
-      <Header />
-      <main className="flex-1 px-4 py-10">
-        <h1 className="text-4xl font-extrabold">ALL IP</h1>
-        <p className="mt-2 text-slate-300">Welcome to your pixel-perfect starter.</p>
-      </main>
-      <Footer />
+    <div className="p-8">
+      <h1 className="text-2xl font-bold">Single IP</h1>
+      <p className="mt-4">In this page show all infromation of {ip} single ip</p>
     </div>
   );
 }

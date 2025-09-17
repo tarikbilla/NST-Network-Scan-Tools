@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MdWifi, MdComputer, MdRouter } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [ip, setIp] = useState("");
@@ -41,12 +42,13 @@ export default function Home() {
           </div>
         </div>
 
-        <button
-          onClick={onScanNow}
+        <Link
+          // onClick={onScanNow}
           className="absolute bottom-6 left-6 right-6 rounded-[9px] bg-[#007AFF] py-3 text-[16px] font-semibold text-white transition hover:bg-blue-700"
+          to="/allip"
         >
           Scan Now
-        </button>
+        </Link>
       </section>
 
       {/* Manual Scan */}
@@ -63,12 +65,13 @@ export default function Home() {
             placeholder="192.168.0.1"
             className="flex-1 rounded border border-[#64748B] px-3 py-2 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          <button
-            onClick={onScanIp}
+          <Link
+            // onClick={onScanIp}
             className="rounded bg-[#34C759] px-6 py-2 font-semibold text-white transition hover:bg-green-600"
+            to={`/singleip/${ip}`}
           >
             Scan
-          </button>
+          </Link>
         </div>
       </section>
     </>
